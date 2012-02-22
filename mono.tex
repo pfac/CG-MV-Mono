@@ -21,15 +21,19 @@
 
 \title{Terrain Generation using Fractals} % title
 
-\author{Pedro Costa
+\author{Pedro Costa -- \texttt{pg19830@alunos.uminho.pt}
 	\affil{University of Minho\\Department of Informatics}
 }
 
+\category{I.3.7}{Computer Graphics}{Three-Dimensional Graphics and Realism}[Fractals]
+\category{I.3.5}{Computer Graphics}{Computational Geometry and Object Modeling}[Curve, surface, solid and object representations; Geometric algorithms, languages and systems]
+\category{I.3.3}{Computer Graphics}{Picture/Image Generation}[Line and curve generation]
 %\category{I.3.7}{Computer Graphics}{Three-Dimensional Graphics and Realism}[Animation]
 %\category{I.3.5}{Computer Graphics}{Computational Geometry and Object Modeling}[Physically based modeling]
 
-%\terms{Experimentation, Human Factors}
+\terms{Algorithms, Theory}
 
+\keywords{survey, state of the art, terrain generation}
 %\keywords{Face animation, image-based modelling, iris animation, photorealism, physiologically-based modelling}
 
 %\acmformat{Pamplona, V. F., Oliveira, M. M., and Baranoski, G. V. G. 2009. Photorealistic models for pupil light
@@ -47,19 +51,11 @@
 
 
 \begin{abstract} 
-%  We introduce a physiologically-based model for pupil light reflex (PLR) and an image-based model for iridal pattern
-%deformation. Our PLR model expresses the pupil diameter as a function of the lighting of the  environment, and is
-%described by a delay-differential equation, naturally adapting the pupil diameter even to abrupt changes in light
-%conditions. Since the parameters of our PLR model were derived from measured data, it correctly simulates the actual
-%behavior of the human pupil. Another contribution of our work is a model for realistic deformation of the iris pattern as a
-%function of pupil dilation and constriction. Our models produce high-fidelity appearance effects and can be used to
-%produce real-time predictive animations of the pupil and iris under variable lighting conditions. We assess the
-%predictability and quality of our simulations  through comparisons of modeled results against measured data derived from
-%experiments also described in this work. Combined, our models can bring facial animation to new photorealistic
-%standards. Another contribution of our work is a model for realistic deformation of the iris pattern as a
-%function of pupil dilation and constriction. Another contribution of our work is a model for realistic deformation of the iris pattern as a
-%function of pupil dilation and constriction.  Another contribution of our work is a model for realistic deformation of the iris pattern as a
-%function of pupil dilation and constriction.
+The generation of terrains is a tool often necessary in many areas, such as military training, animation or game development. Creating such models manually is overwhelmingly complex and extracting detail from the real world generates massive quantities of data with limited detail.
+
+Fractal based methods have evolved over decades and allow the procedural generation of very large terrains with few resources. The stochastic nature of fractals provide infinite possibilities for the final results, and pseudo-random number generators allow the creation of primitives with the required characteristics for virtual models.
+
+This document presents the classical fractal methods for terrain generation, along with recent problems and trends such as the creation of water elements, the distribution of vegetation and the generation of cities and roads.
 \end{abstract}
 
 
@@ -181,8 +177,16 @@ In his work, Miller provides an alternative to Fournier's algorithms. His altern
 
 Even nowadays, work is still being done to improve these algorithms. In \cite{Chen11}, the authors introduce the \textbf{BinSplit algorithm} based on the fBm and the fundamental principal of random midpoint displacement methods. It works like the triangle edge subdivision, but only the midpoint of the hypotenuse is generated, and only two new triangles are created.
 
-\section{Perlin Noise}
+\subsection{Perlin Noise}
 In \cite{Perlin85}, Ken Perlin introduced a noise function based in a pseudo-random generator function. This function presented some interesting properties typical of fractal geometry. Since then, a common approach to terrain generation has also been to use this function to generate a gray-scale image, which can then be used as a height-map for the terrain.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.6\columnwidth]{images/perlin.png}
+	\end{center}
+	\caption{Gray-scale image generated with Perlin's noise algorithm.\newline Source: \texttt{\url{http://nullprogram.com/img/noise/perlin.png}}}
+	\label{fig:perlin}
+\end{figure}
 
 Perlin's algorithm for the noise function uses a $n$-dimensional grid ($n=2$ in this case). For each point $P$, it looks at each of the surrounding $2^{n}$ points $Q$ at a time. For each point $Q$, it generates a pseudo-random gradient vector $G$. It then computes the inner product $G \cdot ( P - Q )$. This will give the value at $P$ of the linear function with gradient $G$, which is zero at $Q$. Using $n$ weight curves, the final noise value for $P$ will be the interpolation between all the computed inner products.
 
