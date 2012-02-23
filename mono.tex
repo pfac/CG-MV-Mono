@@ -173,7 +173,19 @@ In his work, Miller provides an alternative to Fournier's algorithms. His altern
 	\label{fig:algorithm:sss}
 \end{figure}
 
-\autoref{fig:algorithm:tes}, \autoref{fig:algorithm:dss} and \autoref{fig:algorithm:sss} contain the diagrams for the explained algorithms, taken from \cite{Macklem03}.
+\autoref{fig:algorithm:tes}, \autoref{fig:algorithm:dss} and \autoref{fig:algorithm:sss} contain the diagrams for the explained algorithms, taken from \cite{Macklem03}. Miller tested these three algorithms to generate constrained models where the four corners of the map and the central point are initialized. The results are presented in \autoref{fig:miller}.
+
+\begin{figure}[!htp]
+	\begin{center}
+		\begin{enumerate}
+		\item{\includegraphics[width=0.7\columnwidth]{images/algorithm/triangleedge-mountain.png}\label{itm:tes}}
+		\item{\includegraphics[width=0.7\columnwidth]{images/algorithm/diamondsquare-mountain.png}\label{itm:dss}}
+		\item{\includegraphics[width=0.7\columnwidth]{images/algorithm/squaresquare-mountain.png}\label{itm:sss}}
+		\end{enumerate}
+	\end{center}
+	\caption{The same mountain generated with three different subdivision algorithms: (\ref{itm:tes}) was generated using triangle-edge subdivision, (\ref{itm:dss}) using the diamond-square subdivision and (\ref{itm:sss}) using square-square subdivision.}
+	\label{fig:miller}
+\end{figure}
 
 Even nowadays, work is still being done to improve these algorithms. In \cite{Chen11}, the authors introduce the \textbf{BinSplit algorithm} based on the fBm and the fundamental principal of random midpoint displacement methods. It works like the triangle edge subdivision, but only the midpoint of the hypotenuse is generated, and only two new triangles are created.
 
@@ -199,7 +211,21 @@ Filters are commonly used to optimize the generated terrain, for instance, smoot
 
 As for physical phenomena, \cite{Olsen04} mentions two commonly used erosion algorithms: thermal and hydraulic. Thermal erosion diminishes sharp changes in the elevation by iteratively distributing the material from higher to lower points, until the maximum angle of stability for the material is reached. Hydraulic erosion algorithms simulate the phenomena of rainfall by using, for example, cellular automata, where the amount of water and dissolved material that flows out to other cells is calculated based on the local slope of the terrain surface. While these algorithms add great realism to the generated terrains, they are considerably slow, reason why recent research has focused in trying to port then to the GPU.
 
+\begin{figure}[!htp]
+	\begin{center}
+		\includegraphics[width=\columnwidth]{images/erosion.png}
+	\end{center}
+	\caption{Screenshot from \textit{Tribal Trouble}, a realtime strategy game using the methods described in Olsen's paper for fast runtime generation of eroded terrain.}
+\end{figure}
+
 As previously mentioned, typical fractal based terrain generators rarely are able to deal with user constraints, which led to some specific research efforts on the topic. In \cite{Stachniak05}, the authors proposed a method which integrated constraints into the generation process using mask images. It employs a search algorithm that finds an acceptable set of deformations to apply to a random terrain in order to obtain a conforming one. In \cite{Schneider06}, the process explained is similar to the one of generation through noise functions, but the noise grid is replaced with a set of user-defined gray-scale images. In \cite{Zhou07}, the introduced technique generated a terrain based on an input height-map, followed by a user description of the lines representing large-scale features such as mountain ridges. \cite{Belhadj07} defines a system where a set of known elevation values (such as rivers and mountain ridges) constrain the midpoint displacement process.
+
+\begin{figure}[!htp]
+	\begin{center}
+		\includegraphics[width=\columnwidth]{images/constrained.png}
+	\end{center}
+	\caption{Realistic renderings of models generated using a user sketch as local constraints (from Belhadj, 2007)}
+\end{figure}
 
 An obvious limitation of all the terrain generation methods mentioned so far is that they are all unable to create overhangs and caves. All of these methods use some kind of function to translate a position into a height value, and a crucial property of every function is that there can be only one value for each given set of arguments. In a recent work, \cite{Peytavie09} provide a rather elaborate structure using different material layers which supports caves, arches and overhangs.
 
@@ -211,13 +237,35 @@ To generate rivers, the approaches are divided between those which run during an
 Aside from rivers, water bodies tend to be created after the generation of the terrain using flood algorithms starting in low height points, but the results lack realism.
 
 \subsection{L-Systems: Vegetation, Roads and Cities}
+
+\begin{figure}[!htp]
+	\begin{center}
+		\includegraphics[width=\columnwidth]{images/city.png}
+	\end{center}
+	\caption{A virtual city modelled according to area of water, elevation and population density. The roads are created using goal-driven L-systems which try to connect high population density areas. Approximately 26000 buildings were created.}
+\end{figure}
+
 Lindenmayer-systems, an often user grammar rewriting system, are the choice of excellence for procedures which simulate the growth of plants. These processes start from the root, adding increasingly smaller branches and ending with leaves. \cite{Parish01} also use a goal-driven L-system to grow a road network, which tries to connect zones with high population density using specific road patterns (such as raster or the radial patterns). \cite{Wonka03} introduce the concept of split grammar, a formal context-free grammar, designed to create buildings which the authors use to create simple shape buildings with believable facades. \cite{Muller06} apply another type of grammar -- shape grammar. It uses context sensitive rules which allows the possibility to model roofs and rotated shapes.
 
 Vegetation distribution mechanisms are often used after defining the plants, to save the modellers the laborious task of manually placing every model individually in large areas (such as a forest). \cite{Deussen98} describe a model which simulates an ecosystem. This takes the generated terrain and a water network map as input and uses the available information about the plants (such as rate of growth) to iteratively compute their distribution according to rules such as the competition for soil, sunlight and water, resulting in a very slow process.
 
+\begin{figure}[!htp]
+	\begin{center}
+		\includegraphics[width=\columnwidth]{images/ecosys.png}
+	\end{center}
+	\caption{A scene created using the work of Deussen et al., 1998. Plants are placed iteratively according to soil, water and sunlight competition rules.}
+\end{figure}
+
 Road networks are usually created using real world based patterns or L-systems, but different approaches have been researched to obtain high levels of realism. \cite{Lechner03} went for a agent-based approach in a city divided into different areas (such as residential, commercial, industrial, etc), where one agent would search for unconnected areas in the city, reaching for it in the most suitable path if such an area is not located too far from the already existing road, and one which is placed in random locations of the existing network, directly connects it to a random location if the travel time through the shortest path to that spot is considered excessive. Other approaches rely on the terrain profile. \cite{Kelly07} plan the path of the main roads between user set nodes to maintain an even change in the elevation, as much as possible. \cite{Bruneton08} propose a method to blend road profiles into the height-map using shaders.
 
 Although L-systems can be used to successfully create buildings, the cities created by these methods lack a realistic structure. \cite{Groenewegen09} generate the distribuition of different types of districts according to land use models of known cities, taking into account relevant factors (such as the historic core of the city and the attraction of the terrain for each kind of area). \cite{Weber09} use comparable models in a simplified simulation of expanding cities, which results in a relatively fast and interactive system.
+
+\begin{figure}[!htp]
+	\begin{center}
+		\includegraphics[width=\columnwidth]{images/citytime.png}
+	\end{center}
+	\caption{Example simulation of a city on a given street. The initial configuration is defined by the user. Different colors are used for distinct purpose land lots. To be noted, the blue ones represent industrial zones, which are reallocated over the years.}
+\end{figure}
 
 \section{Conclusion}
 This document presented the overall process of terrain generation, where a special importance was given to fractal based methods. It began with a formal explanation of classical concepts regarding procedural stochastic modeling, where terms the requirements for stochastic models were defined, followed by the required properties for any modeling primitive, which are especially difficult to achieve using stochastic models.
